@@ -17,16 +17,16 @@ public class Main {
         String word = scanner.nextLine();
 
         int length = string.length();
-        int N = (int) Math.sqrt(length);
+        int sqrt = (int) Math.sqrt(length);
 
-        if (N * N != length) {
+        if (sqrt * sqrt != length) {
             System.out.println("Wrong String!");
             System.exit(0);
         }
-        char[][] matrix = buildMatrix(string, N);
+        char[][] matrix = buildMatrix(string, sqrt);
         display2DArray(matrix);
 
-        Map<Character, List<String>> mapOfCharacterCoordinates = getMapOfCharacterCoordinates(string, matrix);
+        Map<Character, List<String>> mapOfCharacterCoordinates = getMapOfCharacterCoordinates(string);
 
         String result = getResult(word, mapOfCharacterCoordinates);
 
@@ -50,19 +50,7 @@ public class Main {
         }
     }
 
-    public static String checkIfMatrixContainsSymbols(char[][] matrix, String s) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (s.contains(Character.toString(matrix[i][j]))){
-                    stringBuilder.append(matrix[i][j]);
-                }
-            }
-        }
-        return stringBuilder.toString();
-    }
-
-    public static Map<Character, List<String>> getMapOfCharacterCoordinates(String string, char[][] matrix) {
+    public static Map<Character, List<String>> getMapOfCharacterCoordinates(String string) {
         Map<Character, List<String>> map = new HashMap<>();
         for (int i = 0; i < string.length(); i++) {
             if (map.containsKey(string.charAt(i))) {
@@ -83,7 +71,7 @@ public class Main {
                 String first = map.get(str.charAt(i)).getFirst();
                 stringBuilder.append(first);
             } else {
-                return "It is not possible to create word your word from given string.";
+                return "It is not possible to create your word from given string.";
             }
         }
         return stringBuilder.append(".").toString();
