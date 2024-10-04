@@ -2,8 +2,6 @@ package main;
 
 import java.util.Scanner;
 
-import static main.Main.buildMatrix;
-
 public class MatrixAlgorithm2 {
 
     public static final int COORDINATES_LENGTH = 6;
@@ -24,13 +22,12 @@ public class MatrixAlgorithm2 {
         int sqrt = (int) Math.sqrt(length);
 
         if (sqrt * sqrt != length) {
-            System.out.println("Wrong String!");
+            System.out.println("Matrix isn't perfect!");
             System.exit(0);
         }
 
         char[][] matrix = buildMatrix(string, sqrt);
 
-        display2DArray(matrix);
         StringBuilder stringBuilder = new StringBuilder();
         for (int row = 0; row < matrix.length; row++) {
             for (int col = 0; col < matrix[row].length; col++) {
@@ -42,27 +39,15 @@ public class MatrixAlgorithm2 {
 
         int resultStringCoordinatesLength = COORDINATES_LENGTH * word.length();
         cutStringIfNecessary(stringBuilder, resultStringCoordinatesLength);
-        printResult(stringBuilder, COORDINATES_LENGTH, word);
-
-        // Check if there are enough coordinates in the result string
-//        if (/*!(stringBuilder.length() < resultStringCoordinatesLength)*/ stringBuilder.length() > resultStringCoordinatesLength) {
-//
-//            // There is possible more than one way to find word in the matrix.
-//            // If yes, I leave only firs way.
-//            stringBuilder.delete(resultStringCoordinatesLength, stringBuilder.length());
-//            System.out.println(stringBuilder);
-//        } else {
-//            System.out.println("There is no word " + word + " from current string.");
-//        }
+        printResult(stringBuilder, word);
     }
 
-    public static void display2DArray(char[][] array) {
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[i].length; j++) {
-                System.out.print(array[i][j] + " ");
-            }
-            System.out.println();
+    public static char[][] buildMatrix(String str, int n) {
+        char[][] matrix = new char[n][n];
+        for (int i = 0; i < str.length(); i++) {
+            matrix[i / n][i % n] = str.charAt(i);
         }
+        return matrix;
     }
 
     public static StringBuilder checkNeighbors(char[][] matrix, int row, int col, String word, int charPosition, StringBuilder stringBuilder) {
@@ -70,73 +55,54 @@ public class MatrixAlgorithm2 {
         int n = matrix.length;
         counter++;
 
-        if (charPosition < word.length() - 1 /*counter != word.length() - 1*/) {
+        if (charPosition < word.length() - 1) {
             charPosition++;
         } else {
-            return stringBuilder/*.append("[").append(row).append(", ").append(col).append("]")*/;
+            return stringBuilder;
         }
         char nextChar = word.charAt(charPosition);
 
         // Check the left element (if exists)
+        boolean needDelete = counter != word.length();
         if (col - 1 >= 0 && matrix[row][col - 1] == nextChar) {
-
-//            stringBuilder.append("[").append(row).append(", ").append(col).append("]");
             checkNeighbors(matrix, row, col - 1, word, charPosition, stringBuilder);
-            if (/*charPosition != word.length() - 1*/counter != word.length() /*- 1*/) {
+            if (!needDelete) {
                 counter--;
                 stringBuilder.delete(stringBuilder.length() - COORDINATES_LENGTH, stringBuilder.length());
-            } /*else {
-                return stringBuilder;
-            }*/
+            }
         }
 
 
         // Check the right element (if exists)
         if (col + 1 < n && matrix[row][col + 1] == nextChar) {
-
-//            stringBuilder.append("[").append(row).append(", ").append(col).append("]");
             checkNeighbors(matrix, row, col + 1, word, charPosition, stringBuilder);
-            if (/*charPosition != word.length() - 1*/ counter != word.length() /*- 1*/) {
+            if (!needDelete) {
                 counter--;
-                /*return */stringBuilder.delete(stringBuilder.length() - COORDINATES_LENGTH, stringBuilder.length());
-            } /*else {
-                return stringBuilder;
-            }*/
+                stringBuilder.delete(stringBuilder.length() - COORDINATES_LENGTH, stringBuilder.length());
+            }
         }
 
         // Check the top element (if exists)
         if (row - 1 >= 0 && matrix[row - 1][col] == nextChar) {
-
-//            stringBuilder.append("[").append(row).append(", ").append(col).append("]");
             checkNeighbors(matrix, row - 1, col, word, charPosition, stringBuilder);
-            if (/*charPosition != word.length() - 1*/ counter != word.length() /*- 1*/) {
+            if (!needDelete) {
                 counter--;
-                /*return */stringBuilder.delete(stringBuilder.length() - COORDINATES_LENGTH, stringBuilder.length());
-            } /*else {
-                return stringBuilder;
-            }*/
+                stringBuilder.delete(stringBuilder.length() - COORDINATES_LENGTH, stringBuilder.length());
+            }
         }
 
         // Check the bottom element (if exists)
         if (row + 1 < n && matrix[row + 1][col] == nextChar) {
-//            stringBuilder.append("[").append(row).append(", ").append(col).append("]");
             checkNeighbors(matrix, row + 1, col, word, charPosition, stringBuilder);
-            if (/*charPosition != word.length() - 1*/ counter != word.length() /*- 1*/) {
+            if (!needDelete) {
                 counter--;
-                /*return */stringBuilder.delete(stringBuilder.length() - COORDINATES_LENGTH, stringBuilder.length());
-            } /*else {
-                return stringBuilder;
-            }*/
+                stringBuilder.delete(stringBuilder.length() - COORDINATES_LENGTH, stringBuilder.length());
+            }
         }
         if (counter == 1) {
             counter--;
             stringBuilder.delete(stringBuilder.length() - COORDINATES_LENGTH, stringBuilder.length());
         }
-        return stringBuilder;
-    }
-
-    public static StringBuilder back(StringBuilder stringBuilder) {
-        stringBuilder.delete(stringBuilder.length() - COORDINATES_LENGTH, stringBuilder.length());
         return stringBuilder;
     }
 
@@ -148,8 +114,8 @@ public class MatrixAlgorithm2 {
         }
     }
 
-    private static void printResult(StringBuilder stringBuilder, int number, String word) {
-        if (/*!(stringBuilder.length() < resultStringCoordinatesLength)*/ !stringBuilder.isEmpty()) {
+    private static void printResult(StringBuilder stringBuilder, String word) {
+        if (!stringBuilder.isEmpty()) {
             System.out.println(stringBuilder);
         } else {
             System.out.println("There is no word " + word + " from current string.");
