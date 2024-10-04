@@ -5,7 +5,9 @@ import java.util.Scanner;
 import static main.Main.buildMatrix;
 import static main.Main.display2DArray;
 
-public class Var2 {
+public class MatrixAlgorithm2 {
+
+    public static final int COORDINATES_LENGTH = 6;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -23,11 +25,8 @@ public class Var2 {
             System.exit(0);
         }
 
-
         char[][] matrix = buildMatrix(string, sqrt);
 
-
-        int v = (int) Math.sqrt(word.length());
         display2DArray(matrix);
         StringBuilder stringBuilder = new StringBuilder();
         for (int row = 0; row < matrix.length; row++) {
@@ -38,46 +37,31 @@ public class Var2 {
                 }
             }
         }
-        if (!stringBuilder.isEmpty()) {
+
+        int resultStringCoordinatesLength = COORDINATES_LENGTH * word.length();
+
+        // Check if there are enough coordinates in the result string
+        if (!(stringBuilder.length() < resultStringCoordinatesLength)) {
+
+            // There is possible more than one way to find word in the matrix.
+            // If yes, I leave only firs way.
+            stringBuilder.delete(resultStringCoordinatesLength, stringBuilder.length());
             System.out.println(stringBuilder);
         } else {
             System.out.println("There is no word " + word + " from current string.");
         }
 
 
-
-//        for (int i = 0; i < matrix.length; i++) {
-//            for (int j = 0; j < matrix[i].length; j++) {
-//                int charPosition = 0;
-//                char[] chars = word.toCharArray();
-//                if (matrix[i][j] == chars[charPosition]) {
-//                    stringBuilder.append("[" + i + " " + j + "]");
-//                    if (i - 1 > 0) {
-//                        char matrix1 = matrix[i + 1][j];
-//                        charPosition++;
-//                        if (chars[charPosition] == matrix1) {
-//                            stringBuilder.append("[" + i + 1 + " " + j + "]");
-//                        }
-//                    }
-//                    if (matrix.length > i + 1) {
-//
-//                    }
-//                }
-//            }
-//        }
-
-
     }
 
     public static StringBuilder checkNeighbors(char[][] matrix, int row, int col, String word, int charPosition, StringBuilder stringBuilder) {
-        int n = matrix.length; // Size of the square matrix
+        int n = matrix.length;
 
         if (charPosition < word.length() - 1) {
             charPosition++;
         } else {
             return stringBuilder.append("[").append(row).append(", ").append(col).append("]");
         }
-        char currentValue = matrix[row][col];
         char nextChar = word.charAt(charPosition);
 
         // Check the left element (if exists)
@@ -85,7 +69,6 @@ public class Var2 {
 
             stringBuilder.append("[").append(row).append(", ").append(col).append("]");
             checkNeighbors(matrix, row, col - 1, word, charPosition, stringBuilder);
-//            stringBuilder.delete(stringBuilder.length() - 6, stringBuilder.length());
             return stringBuilder;
         }
 
@@ -95,7 +78,6 @@ public class Var2 {
 
             stringBuilder.append("[").append(row).append(", ").append(col).append("]");
             checkNeighbors(matrix, row, col + 1, word, charPosition, stringBuilder);
-//            stringBuilder.delete(stringBuilder.length() - 6, stringBuilder.length());
             return stringBuilder;
         }
 
@@ -104,7 +86,6 @@ public class Var2 {
 
             stringBuilder.append("[").append(row).append(", ").append(col).append("]");
             checkNeighbors(matrix, row - 1, col, word, charPosition, stringBuilder);
-//            stringBuilder.delete(stringBuilder.length() - 6, stringBuilder.length());
             return stringBuilder;
         }
 
@@ -112,7 +93,6 @@ public class Var2 {
         if (row + 1 < n && matrix[row + 1][col] == nextChar) {
             stringBuilder.append("[").append(row).append(", ").append(col).append("]");
             checkNeighbors(matrix, row + 1, col, word, charPosition, stringBuilder);
-//            stringBuilder.delete(stringBuilder.length() - 6, stringBuilder.length());
             return stringBuilder;
         }
         return stringBuilder;
